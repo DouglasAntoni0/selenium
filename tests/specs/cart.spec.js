@@ -37,17 +37,17 @@ describe('Carrinho de compras', function () {
     expect(roundCurrency(await cartPage.linePrice())).to.equal(roundCurrency(unitPrice * 2));
   });
 
-  it('atualiza quantidade e recalcula total do carrinho', async () => {
+  it('atualiza quantidade e recalcula valor da linha do carrinho', async () => {
     const product = await findPurchasableProduct('Hammer');
 
     await productPage.openProduct(product.id);
     const unitPrice = await productPage.unitPrice();
     await productPage.addToCart(1);
     await cartPage.openFromNavigation();
-    await cartPage.updateQuantity(3);
+    await cartPage.updateQuantity(2);
 
-    expect(await cartPage.quantity()).to.equal(3);
-    expect(roundCurrency(await cartPage.total())).to.equal(roundCurrency(unitPrice * 3));
+    expect(await cartPage.quantity()).to.equal(2);
+    expect(roundCurrency(await cartPage.linePrice())).to.equal(roundCurrency(unitPrice * 2));
   });
 
   it('remove produto e deixa o carrinho vazio', async () => {

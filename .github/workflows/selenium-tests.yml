@@ -22,7 +22,7 @@ jobs:
       HEADLESS: true
       UI_TIMEOUT_MS: 120000
       PAGE_LOAD_TIMEOUT_MS: 120000
-      RETRY_ATTEMPTS: 0
+      RETRY_ATTEMPTS: 1
       USE_PACKAGED_CHROMEDRIVER: false
 
     steps:

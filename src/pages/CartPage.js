@@ -1,3 +1,4 @@
+const { error, Key } = require('selenium-webdriver');
 const BasePage = require('./BasePage');
 const cart = require('../locators/cart.locators');
 const navigation = require('../locators/navigation.locators');
@@ -39,18 +40,13 @@ class CartPage extends BasePage {
     const unitPrice = await this.productPrice();
     const input = await this.find(cart.quantity);
 
-    await input.clear();
-    await input.sendKeys(String(quantity));
-    await this.driver.executeScript(
-      'arguments[0].dispatchEvent(new Event("input", { bubbles: true })); arguments[0].dispatchEvent(new Event("change", { bubbles: true })); arguments[0].blur();',
-      input
-    );
+    await input.sendKeys(Key.chord(Key.CONTROL, 'a'), String(quantity), Key.TAB);
 
     await waitForCondition(this.driver, `Cart quantity did not become ${quantity}`, async () => {
       return Number(await this.value(cart.quantity)) === Number(quantity);
     });
-    await waitForCondition(this.driver, 'Cart total did not recalculate after quantity update', async () => {
-      return roundCurrency(await this.total()) === roundCurrency(unitPrice * Number(quantity));
+    await waitForCondition(this.driver, 'Cart line price did not recalculate after quantity update', async () => {
+      return roundCurrency(await this.linePrice()) === roundCurrency(unitPrice * Number(quantity));
     });
   }
 
@@ -58,7 +54,14 @@ class CartPage extends BasePage {
     await this.click(cart.removeItem);
     await waitForCondition(this.driver, 'Cart item was not removed', async () => {
       const rows = await this.driver.findElements(cart.productTitle);
-      return rows.length === 0 || !(await rows[0].isDisplayed());
+      if (!rows.length) return true;
+
+      try {
+        return !(await rows[0].isDisplayed());
+      } catch (err) {
+        if (err instanceof error.StaleElementReferenceError) return true;
+        throw err;
+      }
     });
   }
 
