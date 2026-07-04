@@ -1,6 +1,7 @@
-const numberFromEnv = (name, fallback) => {
+const numberFromEnv = (name, fallback, { allowZero = false } = {}) => {
   const parsed = Number(process.env[name]);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+  const minimum = allowZero ? 0 : 1;
+  return Number.isFinite(parsed) && parsed >= minimum ? parsed : fallback;
 };
 
 const booleanFromEnv = (name, fallback) => {
@@ -15,7 +16,7 @@ module.exports = {
   headless: booleanFromEnv('HEADLESS', true),
   defaultTimeout: numberFromEnv('UI_TIMEOUT_MS', 45000),
   pageLoadTimeout: numberFromEnv('PAGE_LOAD_TIMEOUT_MS', 90000),
-  retryAttempts: numberFromEnv('RETRY_ATTEMPTS', 1),
+  retryAttempts: numberFromEnv('RETRY_ATTEMPTS', 1, { allowZero: true }),
   defaultCustomer: {
     email: process.env.DEFAULT_CUSTOMER_EMAIL || 'customer@practicesoftwaretesting.com',
     password: process.env.DEFAULT_CUSTOMER_PASSWORD || 'welcome01'
