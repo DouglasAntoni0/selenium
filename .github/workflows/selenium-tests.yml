@@ -19,7 +19,7 @@ jobs:
       UI_TIMEOUT_MS: 45000
       PAGE_LOAD_TIMEOUT_MS: 90000
       RETRY_ATTEMPTS: 1
-      USE_PACKAGED_CHROMEDRIVER: true
+      USE_PACKAGED_CHROMEDRIVER: false
 
     steps:
       - name: Checkout repository
@@ -31,13 +31,26 @@ jobs:
           node-version: 'lts/*'
           cache: npm
 
+      - name: Setup Chrome for Testing
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          chrome-version: 149
+          install-chromedriver: true
+          install-dependencies: true
+
       - name: Install dependencies
         run: npm install
 
-      - name: Show Chrome version
-        run: google-chrome --version
+      - name: Show browser versions
+        run: |
+          "${{ steps.setup-chrome.outputs.chrome-path }}" --version
+          "${{ steps.setup-chrome.outputs.chromedriver-path }}" --version
 
       - name: Run Selenium suite in headless Chrome
+        env:
+          CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROMEDRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         run: npm run test:report
 
       - name: Upload Mochawesome report

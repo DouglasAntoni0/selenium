@@ -27,6 +27,12 @@ function shouldUsePackagedChromeDriver() {
   return !process.env.CI;
 }
 
+function resolveChromeDriverBinary() {
+  if (process.env.CHROMEDRIVER_BINARY) return process.env.CHROMEDRIVER_BINARY;
+  if (shouldUsePackagedChromeDriver()) return require('chromedriver').path;
+  return null;
+}
+
 function buildChromeOptions() {
   const options = new chrome.Options();
   const chromeBinary = resolveChromeBinary();
@@ -59,9 +65,10 @@ async function buildDriver() {
   const builder = new Builder()
     .forBrowser(env.browser)
     .setChromeOptions(buildChromeOptions());
+  const chromeDriverBinary = resolveChromeDriverBinary();
 
-  if (shouldUsePackagedChromeDriver()) {
-    builder.setChromeService(new chrome.ServiceBuilder(require('chromedriver').path));
+  if (chromeDriverBinary) {
+    builder.setChromeService(new chrome.ServiceBuilder(chromeDriverBinary));
   }
 
   const driver = await builder.build();

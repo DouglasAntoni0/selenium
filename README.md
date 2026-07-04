@@ -152,7 +152,7 @@ Se o seu Chrome local estiver em outra major version, voce pode deixar o Seleniu
 $env:USE_PACKAGED_CHROMEDRIVER='false'; npm run test:headless
 ```
 
-No GitHub Actions essa flag fica como `true`, usando o ChromeDriver empacotado para evitar descoberta lenta de driver no runner.
+No GitHub Actions o workflow usa `browser-actions/setup-chrome@v2` para instalar Chrome for Testing e ChromeDriver compativeis, passando `CHROME_BINARY` e `CHROMEDRIVER_BINARY` para a factory.
 
 ## Resultados Obtidos
 
@@ -206,6 +206,7 @@ PAGE_LOAD_TIMEOUT_MS=90000
 RETRY_ATTEMPTS=1
 USE_PACKAGED_CHROMEDRIVER=true|false
 CHROME_BINARY=C:\Program Files\Google\Chrome\Application\chrome.exe
+CHROMEDRIVER_BINARY=C:\path\to\chromedriver.exe
 ```
 
 ## Boas Praticas Aplicadas
