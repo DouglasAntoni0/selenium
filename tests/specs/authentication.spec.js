@@ -32,8 +32,6 @@ describe('Autenticacao e cadastro de clientes', function () {
     await registrationPage.openRegistration();
     await registrationPage.register(customer);
     await registrationPage.expectRedirectedToLogin();
-
-    await waitForVisible(driver, auth.form);
   });
 
   it('autentica com sucesso um cliente dinamico preparado pela API', async () => {
