@@ -19,7 +19,7 @@ jobs:
       UI_TIMEOUT_MS: 45000
       PAGE_LOAD_TIMEOUT_MS: 90000
       RETRY_ATTEMPTS: 1
-      USE_PACKAGED_CHROMEDRIVER: false
+      USE_PACKAGED_CHROMEDRIVER: true
 
     steps:
       - name: Checkout repository

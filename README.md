@@ -152,7 +152,7 @@ Se o seu Chrome local estiver em outra major version, voce pode deixar o Seleniu
 $env:USE_PACKAGED_CHROMEDRIVER='false'; npm run test:headless
 ```
 
-No GitHub Actions essa flag ja fica como `false`, permitindo que o runner use o Chrome/driver compativeis do ambiente de CI.
+No GitHub Actions essa flag fica como `true`, usando o ChromeDriver empacotado para evitar descoberta lenta de driver no runner.
 
 ## Resultados Obtidos
 

@@ -5,14 +5,18 @@ const chrome = require('selenium-webdriver/chrome');
 const { Builder } = require('selenium-webdriver');
 const env = require('../config/environment');
 
-const commonWindowsChromePaths = [
+const commonChromePaths = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  '/usr/bin/google-chrome',
+  '/usr/bin/google-chrome-stable',
+  '/usr/bin/chromium',
+  '/usr/bin/chromium-browser'
 ];
 
 function resolveChromeBinary() {
   if (process.env.CHROME_BINARY) return process.env.CHROME_BINARY;
-  return commonWindowsChromePaths.find((candidate) => fs.existsSync(candidate));
+  return commonChromePaths.find((candidate) => fs.existsSync(candidate));
 }
 
 function shouldUsePackagedChromeDriver() {
