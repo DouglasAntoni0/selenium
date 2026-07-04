@@ -1,0 +1,49 @@
+name: Selenium WebDriver Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  selenium:
+    name: Mocha + Selenium + Chrome Headless
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      BASE_URL: https://practicesoftwaretesting.com
+      API_URL: https://api.practicesoftwaretesting.com
+      HEADLESS: true
+      UI_TIMEOUT_MS: 45000
+      PAGE_LOAD_TIMEOUT_MS: 90000
+      RETRY_ATTEMPTS: 1
+      USE_PACKAGED_CHROMEDRIVER: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup latest Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Show Chrome version
+        run: google-chrome --version
+
+      - name: Run Selenium suite in headless Chrome
+        run: npm run test:report
+
+      - name: Upload Mochawesome report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mochawesome-report
+          path: mochawesome-report
+          if-no-files-found: warn

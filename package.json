@@ -1,0 +1,42 @@
+{
+  "name": "selenium-js-toolshop-qa",
+  "version": "1.0.0",
+  "description": "Projeto profissional de automacao web com Selenium WebDriver, JavaScript, Mocha, Chai e Mochawesome.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "report:clean": "rimraf mochawesome-report test-results",
+    "test": "npm run test:headless",
+    "test:local": "mocha",
+    "test:headed": "cross-env HEADLESS=false mocha",
+    "test:headless": "cross-env HEADLESS=true mocha",
+    "test:report": "npm run report:clean && cross-env HEADLESS=true mocha --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,html=true,json=true,overwrite=true"
+  },
+  "keywords": [
+    "selenium",
+    "webdriver",
+    "javascript",
+    "mocha",
+    "chai",
+    "qa",
+    "automation"
+  ],
+  "author": "Douglas Antoni",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "chai": "^4.5.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "mocha": "^11.1.0",
+    "mochawesome": "^7.1.3",
+    "rimraf": "^6.0.1",
+    "selenium-webdriver": "^4.27.0"
+  },
+  "devDependencies": {
+    "chromedriver": "^149.0.4"
+  }
+}
