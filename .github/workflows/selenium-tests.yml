@@ -16,9 +16,9 @@ jobs:
       BASE_URL: https://practicesoftwaretesting.com
       API_URL: https://api.practicesoftwaretesting.com
       HEADLESS: true
-      UI_TIMEOUT_MS: 45000
-      PAGE_LOAD_TIMEOUT_MS: 90000
-      RETRY_ATTEMPTS: 1
+      UI_TIMEOUT_MS: 120000
+      PAGE_LOAD_TIMEOUT_MS: 120000
+      RETRY_ATTEMPTS: 0
       USE_PACKAGED_CHROMEDRIVER: false
 
     steps:

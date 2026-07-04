@@ -152,7 +152,7 @@ Se o seu Chrome local estiver em outra major version, voce pode deixar o Seleniu
 $env:USE_PACKAGED_CHROMEDRIVER='false'; npm run test:headless
 ```
 
-No GitHub Actions o workflow usa `browser-actions/setup-chrome@v2` para instalar Chrome for Testing e ChromeDriver compativeis, passando `CHROME_BINARY` e `CHROMEDRIVER_BINARY` para a factory.
+No GitHub Actions o workflow usa `browser-actions/setup-chrome@v2` para instalar Chrome for Testing e ChromeDriver compativeis, passando `CHROME_BINARY` e `CHROMEDRIVER_BINARY` para a factory. O CI usa timeouts maiores porque o app publico pode carregar mais lentamente em runners compartilhados.
 
 ## Resultados Obtidos
 

@@ -10,21 +10,25 @@ async function fetchProducts(query = '') {
   return requestJson(url);
 }
 
-async function findPurchasableProduct(preferredQuery = 'Hammer') {
-  const result = await fetchProducts(preferredQuery);
-  const products = result.data || [];
+function pickPurchasableProduct(products) {
   const candidates = products.filter((item) => item.in_stock && !item.is_rental);
-  const product = candidates.find((item) => {
+  return candidates.find((item) => {
     const hasCommercialDiscount = Boolean(item.discount_price || item.discount_percentage);
     const qualifiesForEcoDiscount = item.is_eco_friendly || ['A', 'B'].includes(String(item.co2_rating || '').toUpperCase());
     return !hasCommercialDiscount && !qualifiesForEcoDiscount;
   }) || candidates[0];
+}
 
-  if (!product) {
-    throw new Error(`No purchasable product found for query "${preferredQuery}"`);
+async function findPurchasableProduct(preferredQuery = 'Hammer') {
+  const searchStrategies = [preferredQuery, ''];
+
+  for (const query of searchStrategies) {
+    const result = await fetchProducts(query);
+    const product = pickPurchasableProduct(result.data || []);
+    if (product) return product;
   }
 
-  return product;
+  throw new Error(`No purchasable product found for query "${preferredQuery}" or the default catalog`);
 }
 
 module.exports = {
