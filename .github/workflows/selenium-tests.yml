@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: selenium-webdriver-main
+  cancel-in-progress: true
+
 jobs:
   selenium:
     name: Mocha + Selenium + Chrome Headless
