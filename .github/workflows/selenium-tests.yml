@@ -47,6 +47,12 @@ jobs:
           "${{ steps.setup-chrome.outputs.chrome-path }}" --version
           "${{ steps.setup-chrome.outputs.chromedriver-path }}" --version
 
+      - name: Preflight Selenium browser session
+        env:
+          CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROMEDRIVER_BINARY: ${{ steps.setup-chrome.outputs.chromedriver-path }}
+        run: timeout 90s node -e "const {buildDriver}=require('./src/driver/driverFactory'); (async()=>{const d=await buildDriver(); await d.get('about:blank'); console.log('selenium-preflight-ok'); await d.quit();})().catch(e=>{console.error(e); process.exit(1);});"
+
       - name: Run Selenium suite in headless Chrome
         env:
           CHROME_BINARY: ${{ steps.setup-chrome.outputs.chrome-path }}

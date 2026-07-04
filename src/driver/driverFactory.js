@@ -49,8 +49,13 @@ function buildChromeOptions() {
   options.addArguments(
     `--user-data-dir=${chromeProfile}`,
     '--window-size=1440,1100',
+    '--remote-debugging-port=0',
     '--disable-gpu',
     '--disable-dev-shm-usage',
+    '--disable-setuid-sandbox',
+    '--disable-software-rasterizer',
+    '--disable-extensions',
+    '--disable-background-networking',
     '--disable-notifications',
     '--disable-popup-blocking',
     '--lang=en-US',
