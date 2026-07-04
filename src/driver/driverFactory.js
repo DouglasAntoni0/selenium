@@ -5,6 +5,9 @@ const chrome = require('selenium-webdriver/chrome');
 const { Builder } = require('selenium-webdriver');
 const env = require('../config/environment');
 
+const chromeUserAgent = process.env.CHROME_USER_AGENT
+  || 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36';
+
 const commonChromePaths = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -46,6 +49,14 @@ function buildChromeOptions() {
     options.addArguments('--headless=new');
   }
 
+  options.excludeSwitches('enable-automation');
+  options.setUserPreferences({
+    credentials_enable_service: false,
+    profile: {
+      password_manager_enabled: false
+    }
+  });
+
   options.addArguments(
     `--user-data-dir=${chromeProfile}`,
     '--window-size=1440,1100',
@@ -55,15 +66,26 @@ function buildChromeOptions() {
     '--disable-setuid-sandbox',
     '--disable-software-rasterizer',
     '--disable-extensions',
+    '--disable-blink-features=AutomationControlled',
     '--disable-background-networking',
     '--disable-notifications',
     '--disable-popup-blocking',
     '--lang=en-US',
+    '--use-gl=swiftshader',
+    `--user-agent=${chromeUserAgent}`,
     '--no-sandbox',
     '--remote-allow-origins=*'
   );
 
   return options;
+}
+
+async function configureBrowserFingerprint(driver) {
+  if (typeof driver.sendDevToolsCommand !== 'function') return;
+
+  await driver.sendDevToolsCommand('Page.addScriptToEvaluateOnNewDocument', {
+    source: "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });"
+  });
 }
 
 async function buildDriver() {
@@ -77,6 +99,7 @@ async function buildDriver() {
   }
 
   const driver = await builder.build();
+  await configureBrowserFingerprint(driver);
 
   await driver.manage().setTimeouts({
     implicit: 0,
